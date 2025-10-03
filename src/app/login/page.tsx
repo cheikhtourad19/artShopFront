@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,8 +31,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
-      router.push("/"); // Redirect to dashboard or home page
+      const userData = await login(formData.email, formData.password);
+      if (userData?.isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+      // Redirect to dashboard or home page
     } catch (err: any) {
       setError(err.message || "Échec de la connexion");
     } finally {

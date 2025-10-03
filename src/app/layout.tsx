@@ -8,7 +8,7 @@ import Navbar from "@/components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "My App",
+  title: "ArtShop",
   description: "A Next.js app with JWT authentication",
 };
 

@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
 
-import { useAuth } from "@/contexts/AuthContext";
-
 export default function Home() {
   return (
     <>
