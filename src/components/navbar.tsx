@@ -336,7 +336,7 @@ export default function Navbar() {
 
                   {/* Mes Produits */}
                   <Link
-                    href="/myProducts"
+                    href="/product"
                     onClick={handleDrawerLinkClick}
                     className="flex items-center gap-4 w-full rounded-xl border border-gray-200 bg-white px-5 py-4 text-left text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-cyan-700 hover:border-cyan-200 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 transition-all duration-200 transform hover:scale-[1.02]"
                   >
@@ -363,7 +363,7 @@ export default function Navbar() {
 
                   {/* Publier */}
                   <Link
-                    href="/addproduct"
+                    href="/product/addproduct"
                     onClick={handleDrawerLinkClick}
                     className="flex items-center gap-4 w-full rounded-xl border border-gray-200 bg-white px-5 py-4 text-left text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-cyan-700 hover:border-cyan-200 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 transition-all duration-200 transform hover:scale-[1.02]"
                   >
