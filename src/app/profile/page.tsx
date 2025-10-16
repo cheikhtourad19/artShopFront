@@ -213,10 +213,10 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-xl shadow-lg">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="text-slate-600 mt-4 text-center">
             Chargement de votre profil...
           </p>
         </div>
@@ -225,18 +225,18 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
             <span className="text-white text-2xl font-bold">
               {profile.prenom.charAt(0)}
               {profile.nom.charAt(0)}
             </span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Mon Profil</h1>
-          <p className="text-gray-600">Gérez vos informations personnelles</p>
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">Mon Profil</h1>
+          <p className="text-slate-600">Gérez vos informations personnelles</p>
         </div>
 
         {/* Success/Error Message */}
@@ -284,8 +284,8 @@ export default function ProfilePage() {
         )}
 
         {/* Profile Card */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-slate-200">
+          <div className="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-white">
                 Informations personnelles
@@ -321,7 +321,7 @@ export default function ProfilePage() {
                   <div>
                     <label
                       htmlFor="prenom"
-                      className="block text-sm font-medium text-gray-700 mb-2"
+                      className="block text-sm font-medium text-slate-700 mb-2"
                     >
                       Prénom
                     </label>
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                       value={formData.prenom}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                       placeholder="Votre prénom"
                     />
                   </div>
@@ -340,7 +340,7 @@ export default function ProfilePage() {
                   <div>
                     <label
                       htmlFor="nom"
-                      className="block text-sm font-medium text-gray-700 mb-2"
+                      className="block text-sm font-medium text-slate-700 mb-2"
                     >
                       Nom
                     </label>
@@ -351,7 +351,7 @@ export default function ProfilePage() {
                       value={formData.nom}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                       placeholder="Votre nom"
                     />
                   </div>
@@ -360,7 +360,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-2"
                   >
                     Email
                   </label>
@@ -371,7 +371,7 @@ export default function ProfilePage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                     placeholder="votre@email.com"
                   />
                 </div>
@@ -379,7 +379,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-2"
                   >
                     Téléphone
                   </label>
@@ -390,7 +390,7 @@ export default function ProfilePage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                     placeholder="+216 XX XXX XXX"
                   />
                 </div>
@@ -399,7 +399,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-6 rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                    className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-lg hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                   >
                     {saving ? (
                       <>
@@ -430,7 +430,7 @@ export default function ProfilePage() {
                     type="button"
                     onClick={handleCancel}
                     disabled={saving}
-                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
+                    className="flex-1 bg-slate-100 text-slate-700 py-3 px-6 rounded-lg hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                   >
                     <svg
                       className="w-4 h-4 mr-2"
@@ -452,33 +452,33 @@ export default function ProfilePage() {
             ) : (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600 font-medium mb-1">
+                  <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                    <p className="text-sm text-slate-600 font-medium mb-1">
                       Prénom
                     </p>
-                    <p className="text-lg text-gray-900">{profile.prenom}</p>
+                    <p className="text-lg text-slate-900">{profile.prenom}</p>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600 font-medium mb-1">
+                  <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                    <p className="text-sm text-slate-600 font-medium mb-1">
                       Nom
                     </p>
-                    <p className="text-lg text-gray-900">{profile.nom}</p>
+                    <p className="text-lg text-slate-900">{profile.nom}</p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 font-medium mb-1">
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                  <p className="text-sm text-slate-600 font-medium mb-1">
                     Email
                   </p>
-                  <p className="text-lg text-gray-900">{profile.email}</p>
+                  <p className="text-lg text-slate-900">{profile.email}</p>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 font-medium mb-1">
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                  <p className="text-sm text-slate-600 font-medium mb-1">
                     Téléphone
                   </p>
-                  <p className="text-lg text-gray-900">{profile.phone}</p>
+                  <p className="text-lg text-slate-900">{profile.phone}</p>
                 </div>
               </div>
             )}
@@ -486,8 +486,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Password Card */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
+          <div className="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-white">
                 Sécurité du compte
@@ -522,7 +522,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="currentPassword"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-2"
                   >
                     Mot de passe actuel
                   </label>
@@ -533,7 +533,7 @@ export default function ProfilePage() {
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                     placeholder="Entrez votre mot de passe actuel"
                   />
                 </div>
@@ -541,7 +541,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="newPassword"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-2"
                   >
                     Nouveau mot de passe
                   </label>
@@ -552,10 +552,10 @@ export default function ProfilePage() {
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                     placeholder="Entrez votre nouveau mot de passe"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     Le mot de passe doit contenir au moins 6 caractères
                   </p>
                 </div>
@@ -563,7 +563,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-2"
                   >
                     Confirmer le nouveau mot de passe
                   </label>
@@ -574,7 +574,7 @@ export default function ProfilePage() {
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
                     placeholder="Confirmez votre nouveau mot de passe"
                   />
                 </div>
@@ -583,7 +583,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-6 rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                    className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-lg hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                   >
                     {saving ? (
                       <>
@@ -614,7 +614,7 @@ export default function ProfilePage() {
                     type="button"
                     onClick={handlePasswordCancel}
                     disabled={saving}
-                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
+                    className="flex-1 bg-slate-100 text-slate-700 py-3 px-6 rounded-lg hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                   >
                     <svg
                       className="w-4 h-4 mr-2"
@@ -635,10 +635,10 @@ export default function ProfilePage() {
               </form>
             ) : (
               <div className="text-center py-4">
-                <p className="text-gray-600">
+                <p className="text-slate-600">
                   Votre mot de passe a été mis à jour pour la dernière fois.
                 </p>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-slate-500 mt-2">
                   Pour des raisons de sécurité, nous vous recommandons de
                   changer votre mot de passe régulièrement.
                 </p>

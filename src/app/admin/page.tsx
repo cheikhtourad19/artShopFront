@@ -9,7 +9,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <h1 className="text-4xl font-bold">
-          Vous n'avez pas l'acces a cet espace
+          Vous ne posseder pas acces a cet espace
         </h1>
       </div>
     );
