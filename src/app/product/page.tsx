@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import ProductCard from "@/components/productCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { Product } from "@/types/product";
+import { ProductTable } from "@/components/productsTable";
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -106,11 +106,7 @@ export default function Products() {
 
         {/* Products Grid */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-            {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
+          <ProductTable products={products} />
         ) : (
           /* Empty State */
           <div className="text-center py-16">

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Product } from "../types/product";
+import Link from "next/link";
 
 export default function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
@@ -28,7 +29,7 @@ export default function ProductCard({ product }) {
         {/* Price Badge */}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
           <span className="font-bold text-green-600 text-sm">
-            ${parseFloat(product.price).toFixed(2)}
+            TND{parseFloat(product.price).toFixed(2)}
           </span>
         </div>
 
@@ -47,6 +48,9 @@ export default function ProductCard({ product }) {
         <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
           {product.description}
         </p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+          {product.description}
+        </p>
 
         {/* Additional Info */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
@@ -56,21 +60,18 @@ export default function ProductCard({ product }) {
               {new Date(product.createdAt || Date.now()).toLocaleDateString()}
             </span>
           </div>
-
-          {/* Status Indicator */}
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-xs text-gray-500">Available</span>
-          </div>
         </div>
       </div>
 
       {/* Action Button */}
       <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-        <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+        <Link
+          href={`/product/${product._id}`}
+          className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
+        >
           <span>👀</span>
-          <span>View Details</span>
-        </button>
+          <span>Voir detail</span>
+        </Link>
       </div>
     </div>
   );
