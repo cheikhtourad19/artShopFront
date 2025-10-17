@@ -221,7 +221,7 @@ export default function Product() {
               {/* Price */}
               <div className="mb-6">
                 <span className="text-3xl font-bold text-green-600">
-                  ${product.price}
+                  TND{product.price}
                 </span>
               </div>
 

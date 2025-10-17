@@ -16,6 +16,7 @@ export default function Products() {
 
       if (!user) {
         setError("No user logged in");
+        window.location.href = "/login";
         return;
       }
 
@@ -93,14 +94,13 @@ export default function Products() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-            Our Products
+            Produits
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Discover amazing products tailored just for you
+            gerer vos produits
           </p>
           <div className="mt-4 text-sm text-gray-500">
-            {products.length} {products.length === 1 ? "product" : "products"}{" "}
-            available
+            {products.length} {products.length === 1 ? "produit" : "produits"}{" "}
           </div>
         </div>
 
