@@ -11,7 +11,7 @@ export default function Products() {
   const [error, setError] = useState("");
   const { user } = useAuth();
   const handleProductDeleted = () => {
-    fetchProducts(); // Refresh the user list
+    fetchProducts();
   };
 
   const fetchProducts = useCallback(async () => {
@@ -20,8 +20,11 @@ export default function Products() {
       setError("");
 
       if (!user) {
-        setError("No user logged in");
-        window.location.href = "/login";
+        setError("Vous devez vous connecter");
+        return;
+      }
+      if (!user.isAdmin) {
+        setError("Vous n'avez pas l'acces");
         return;
       }
 
