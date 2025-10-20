@@ -16,29 +16,29 @@ import {
   ModalFooter,
   ModalHeader,
 } from "flowbite-react";
-import { Product } from "@/types/product";
 
-export function ProductTable({
-  products,
-  onProductDeleted,
+export function UserTable({
+  users,
+  onUserDeleted,
 }: {
-  products: Product[];
-  onProductDeleted?: () => void;
+  users: User[];
+  onUserDeleted?: () => void;
 }) {
   const [error, setError] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [message, setMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const token = getToken();
-  async function deleteProduct(id) {
+
+  async function deleteUser(id) {
     setIsDeleting(true);
     setError("");
     setMessage("");
 
     try {
       const response = await fetch(
-        `http://localhost:9000/api/products//deleteproduct/${id}`,
+        `http://localhost:9000/api/admin/users/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -48,14 +48,14 @@ export function ProductTable({
       );
 
       if (!response.ok) {
-        throw new Error(`Failed to delete Product`);
+        throw new Error(`Failed to delete User`);
       }
 
-      setMessage("Produit supprimé avec succès");
+      setMessage("Utilisateur supprimé avec succès");
 
       // Call the callback to refresh the user list
-      if (onProductDeleted) {
-        onProductDeleted();
+      if (onUserDeleted) {
+        onUserDeleted();
       }
 
       // Clear success message after 3 seconds
@@ -66,30 +66,47 @@ export function ProductTable({
       setIsDeleting(false);
     }
   }
+
   const handleDeleteClick = (userId) => {
-    setSelectedProductId(userId);
+    setSelectedUserId(userId);
     setOpenModal(true);
   };
+
   const confirmDelete = () => {
-    if (selectedProductId) {
-      deleteProduct(selectedProductId);
+    if (selectedUserId) {
+      deleteUser(selectedUserId);
     }
     setOpenModal(false);
-    setSelectedProductId(null);
+    setSelectedUserId(null);
   };
+
   return (
     <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-100">
+      {message && (
+        <div className="p-4 mb-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-green-700 font-medium">{message}</p>
+        </div>
+      )}
+      {error && (
+        <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 font-medium">{error}</p>
+        </div>
+      )}
+
       <Table hoverable>
         <TableHead className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50">
           <TableRow>
             <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
-              Titre
+              Nom
             </TableHeadCell>
             <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
-              Description
+              prenom
             </TableHeadCell>
             <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
-              Prix
+              email
+            </TableHeadCell>
+            <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
+              numéro
             </TableHeadCell>
             <TableHeadCell className="text-right">
               <span className="text-gray-700 font-bold text-sm uppercase tracking-wide">
@@ -99,80 +116,42 @@ export function ProductTable({
           </TableRow>
         </TableHead>
         <TableBody className="divide-y divide-gray-100">
-          {products.map((product, index) => (
+          {users.map((user, index) => (
             <TableRow
-              key={product._id}
+              key={user._id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gradient-to-r hover:from-blue-50/30 hover:via-transparent hover:to-purple-50/30 transition-all duration-300 group"
             >
               <TableCell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white group-hover:text-blue-700 transition-colors duration-200">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span>{product.title}</span>
+                  <span>{user.nom}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-300 max-w-md">
-                <span className="line-clamp-2">{product.description}</span>
+              <TableCell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white group-hover:text-blue-700 transition-colors duration-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span>{user.prenom}</span>
+                </div>
               </TableCell>
-              <TableCell className="font-semibold">
-                <div className="inline-flex items-center bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 px-3 py-1.5 rounded-xl text-sm font-bold">
-                  {parseFloat(product.price).toFixed(2)} TND
+              <TableCell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white group-hover:text-blue-700 transition-colors duration-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span>{user.email}</span>
+                </div>
+              </TableCell>
+              <TableCell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white group-hover:text-blue-700 transition-colors duration-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span>{user.phone}</span>
                 </div>
               </TableCell>
 
               <TableCell>
                 <div className="flex items-center justify-end space-x-2">
-                  {/* Voir Button */}
-                  <a
-                    href={`/product/${product._id}`}
-                    className="group/btn inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    <span>Voir</span>
-                  </a>
-
-                  {/* Modifier Button */}
-                  <a
-                    href="#"
-                    className="group/btn inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    <span>Modifier</span>
-                  </a>
-
-                  {/* Supprimer Button */}
                   <button
-                    onClick={() => handleDeleteClick(product._id)}
-                    className="group/btn inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105"
+                    onClick={() => handleDeleteClick(user._id)}
+                    disabled={isDeleting}
+                    className="group/btn inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     <svg
                       className="w-4 h-4"
@@ -195,13 +174,14 @@ export function ProductTable({
           ))}
         </TableBody>
       </Table>
+
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Confirmer la suppression</ModalHeader>
         <ModalBody>
           <div className="space-y-6">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              Êtes-vous sûr de vouloir supprimer ce Produit ? Cette action est
-              irréversible.
+              Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action
+              est irréversible.
             </p>
           </div>
         </ModalBody>

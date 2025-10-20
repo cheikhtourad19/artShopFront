@@ -164,7 +164,7 @@ export default function Product() {
             <div className="aspect-w-4 aspect-h-3">
               <div className="h-96 sm:h-[500px] lg:h-full rounded-lg overflow-hidden">
                 <Carousel
-                  slideInterval={5000}
+                  slideInterval={1000}
                   indicators={true}
                   className="h-full"
                 >

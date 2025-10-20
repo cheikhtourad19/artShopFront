@@ -1,17 +1,19 @@
 "use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Product } from "@/types/product";
 import { ProductTable } from "@/components/productsTable";
 
 export default function Products() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user } = useAuth();
   const handleProductDeleted = () => {
     fetchProducts(); // Refresh the user list
   };
+
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
@@ -24,7 +26,7 @@ export default function Products() {
       }
 
       const response = await fetch(
-        `http://localhost:9000/api/products/getproduct_by_user/${user.id}`,
+        `http://localhost:9000/api/products/getproducts`,
         {
           method: "GET",
           headers: {
