@@ -36,7 +36,7 @@ export default function RootLayout({
         <Footer container>
           <div className="w-full text-center">
             <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
-              <FooterBrand href="/" src="logo.png" alt="Logo" name="ArtShop" />
+              <FooterBrand href="/" src="/logo.png" alt="Logo" name="ArtShop" />
               <FooterLinkGroup>
                 <FooterLink href="#">About</FooterLink>
                 <FooterLink href="#">Privacy Policy</FooterLink>
