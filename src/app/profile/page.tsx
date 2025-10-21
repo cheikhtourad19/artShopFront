@@ -61,6 +61,9 @@ export default function ProfilePage() {
       console.error("Failed to fetch profile:", error);
       window.location.href = "/login";
     } finally {
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
       setLoading(false);
     }
   };
@@ -106,17 +109,29 @@ export default function ProfilePage() {
         }
         setMessage({ type: "success", text: "Profil mis à jour avec succès" });
         setIsEditing(false);
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       } else {
         const errorData = await response.json();
         setMessage({
           type: "error",
           text: errorData.message || "Échec de la mise à jour du profil",
         });
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       }
     } catch (error) {
       console.error("Failed to update profile:", error);
       setMessage({ type: "error", text: "Erreur réseau. Veuillez réessayer." });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
     } finally {
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
       setSaving(false);
     }
   };
@@ -133,6 +148,9 @@ export default function ProfilePage() {
         text: "Les nouveaux mots de passe ne correspondent pas",
       });
       setSaving(false);
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
       return;
     }
 
@@ -143,6 +161,9 @@ export default function ProfilePage() {
         text: "Le mot de passe doit contenir au moins 6 caractères",
       });
       setSaving(false);
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
       return;
     }
 
@@ -172,18 +193,27 @@ export default function ProfilePage() {
           confirmPassword: "",
         });
         setIsEditingPassword(false);
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       } else {
         const errorData = await response.json();
         setMessage({
           type: "error",
           text: errorData.message || "Échec de la mise à jour du mot de passe",
         });
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       }
     } catch (error) {
       console.error("Failed to update password:", error);
       setMessage({ type: "error", text: "Erreur réseau. Veuillez réessayer." });
     } finally {
       setSaving(false);
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
     }
   };
 
@@ -240,21 +270,33 @@ export default function ProfilePage() {
         </div>
 
         {/* Success/Error Message */}
-        {message.text && (
-          <div
-            className={`mb-6 p-4 rounded-lg ${
-              message.type === "success"
-                ? "bg-green-50 border border-green-200 text-green-700"
-                : "bg-red-50 border border-red-200 text-red-700"
-            }`}
-          >
-            <div className="flex">
-              <div className="flex-shrink-0">
-                {message.type === "success" ? (
+        <div className="fixed top-4 right-4 z-50 space-y-2 w-96">
+          {message.text.trim() !== "" && (
+            <div
+              className={`border-l-4 px-6 py-4 rounded-lg shadow-lg animate-slide-in-right ${
+                message.type === "error"
+                  ? "bg-red-50 border-red-500 text-red-800"
+                  : "bg-green-50 border-green-500 text-green-800" // default to success
+              }`}
+            >
+              <div className="flex items-center">
+                {message.type === "error" ? (
                   <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
+                    className="w-5 h-5 mr-3 flex-shrink-0 text-red-600"
                     fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-5 h-5 mr-3 flex-shrink-0 text-green-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
                     <path
                       fillRule="evenodd"
@@ -262,26 +304,12 @@ export default function ProfilePage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                ) : (
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
                 )}
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium">{message.text}</p>
+                <span className="font-medium">{message.text}</span>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Profile Card */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-slate-200">

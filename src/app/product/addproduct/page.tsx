@@ -10,6 +10,7 @@ import {
   AlertCircle,
   Sparkles,
   RotateCcw,
+  Wand2,
 } from "lucide-react";
 import { getToken } from "@/lib/auth";
 
@@ -29,6 +30,7 @@ export default function AddProductForm() {
   const [currentEnhancingIndex, setCurrentEnhancingIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [generatingDescription, setGeneratingDescription] = useState(false);
   const token = getToken();
 
   const handleInputChange = (e) => {
@@ -69,11 +71,78 @@ export default function AddProductForm() {
     }
   };
 
+  // Nouvelle fonction pour générer la description avec IA
+  const generateDescriptionWithAI = async () => {
+    if (!formData.title.trim()) {
+      setMessage({
+        type: "error",
+        text: "Veuillez d'abord saisir un titre pour le produit",
+      });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
+      return;
+    }
+
+    setGeneratingDescription(true);
+    setMessage({ type: "", text: "" });
+
+    try {
+      const response = await fetch(
+        "http://localhost:9000/api/ai/generate-description",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            currentDescription: formData.description,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to generate description");
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.description) {
+        setFormData((prev) => ({
+          ...prev,
+          description: data.description,
+        }));
+        setMessage({
+          type: "success",
+          text: "Description générée avec succès!",
+        });
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
+      } else {
+        throw new Error(data.message || "Failed to generate description");
+      }
+    } catch (error) {
+      console.error("Error generating description:", error);
+      setMessage({
+        type: "error",
+        text: "Erreur lors de la génération de la description. Veuillez réessayer.",
+      });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
+    } finally {
+      setGeneratingDescription(false);
+    }
+  };
+
   const enhanceImagesWithAI = async () => {
     if (images.length === 0) {
       setMessage({
         type: "error",
-        text: "Please upload images first",
+        text: "Veuillez d'abord télécharger des images",
       });
       return;
     }
@@ -130,7 +199,7 @@ export default function AddProductForm() {
       console.error("Error enhancing images:", error);
       setMessage({
         type: "error",
-        text: "Failed to enhance images. Please try again.",
+        text: "Erreur lors de l'amélioration des images. Veuillez réessayer.",
       });
       setEnhancing(false);
       setShowEnhanceModal(false);
@@ -146,7 +215,7 @@ export default function AddProductForm() {
     setShowEnhanceModal(false);
     setMessage({
       type: "success",
-      text: "Enhanced images applied successfully!",
+      text: "Images améliorées appliquées avec succès!",
     });
   };
 
@@ -180,7 +249,7 @@ export default function AddProductForm() {
     ) {
       setMessage({
         type: "error",
-        text: "Please fill in all required fields",
+        text: "Veuillez remplir tous les champs obligatoires",
       });
       return;
     }
@@ -188,7 +257,7 @@ export default function AddProductForm() {
     if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
       setMessage({
         type: "error",
-        text: "Price must be a valid positive number",
+        text: "Le prix doit être un nombre positif valide",
       });
       return;
     }
@@ -228,18 +297,27 @@ export default function AddProductForm() {
         setImages([]);
         imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
         setImagePreviews([]);
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       } else {
         setMessage({
           type: "error",
-          text: data.message || "Failed to add product",
+          text: data.message || "Erreur lors de l'ajout du produit",
         });
+        setTimeout(() => {
+          setMessage({ type: "", text: "" });
+        }, 1000);
       }
     } catch (error) {
       console.error("Error adding product:", error);
       setMessage({
         type: "error",
-        text: "An error occurred while adding the product",
+        text: "Une erreur est survenue lors de l'ajout du produit",
       });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 1000);
     } finally {
       setLoading(false);
     }
@@ -248,39 +326,41 @@ export default function AddProductForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
       <div className="fixed top-4 right-4 z-50 space-y-2 w-96">
-        {message && (
-          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-lg shadow-lg animate-slide-in-right">
+        {message.text.trim() !== "" && (
+          <div
+            className={`border-l-4 px-6 py-4 rounded-lg shadow-lg animate-slide-in-right ${
+              message.type === "error"
+                ? "bg-red-50 border-red-500 text-red-800"
+                : "bg-green-50 border-green-500 text-green-800"
+            }`}
+          >
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-3 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="font-medium">{message}</span>
-            </div>
-          </div>
-        )}
-        {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg shadow-lg animate-slide-in-right">
-            <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-3 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="font-medium">{error}</span>
+              {message.type === "error" ? (
+                <svg
+                  className="w-5 h-5 mr-3 flex-shrink-0 text-red-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-5 h-5 mr-3 flex-shrink-0 text-green-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+              <span className="font-medium">{message.text}</span>
             </div>
           </div>
         )}
@@ -321,7 +401,7 @@ export default function AddProductForm() {
                   htmlFor="title"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  titre du produit <span className="text-rose-500">*</span>
+                  Titre du produit <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -335,12 +415,29 @@ export default function AddProductForm() {
               </div>
 
               <div>
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Description <span className="text-rose-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label
+                    htmlFor="description"
+                    className="block text-sm font-semibold text-gray-700"
+                  >
+                    Description <span className="text-rose-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateDescriptionWithAI}
+                    disabled={generatingDescription || !formData.title.trim()}
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-medium rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    {generatingDescription ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Wand2 className="w-4 h-4" />
+                    )}
+                    {generatingDescription
+                      ? "Génération..."
+                      : "Générer avec IA"}
+                  </button>
+                </div>
                 <textarea
                   id="description"
                   name="description"
@@ -348,8 +445,12 @@ export default function AddProductForm() {
                   onChange={handleInputChange}
                   rows={5}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none bg-gray-50 focus:bg-white"
-                  placeholder="Describe your product in detail..."
+                  placeholder="Décrivez votre produit en détail..."
                 />
+                <p className="text-xs text-gray-500 mt-2">
+                  L'IA peut vous aider à créer une description marketing
+                  professionnelle
+                </p>
               </div>
 
               <div>
@@ -379,7 +480,7 @@ export default function AddProductForm() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Produit Images
+                  Images du produit
                 </label>
                 <div className="border-3 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-200 cursor-pointer group">
                   <input
@@ -395,7 +496,7 @@ export default function AddProductForm() {
                       <Image className="w-8 h-8 text-blue-600" />
                     </div>
                     <p className="mt-4 text-base font-medium text-gray-700">
-                      Click pour choisir ou glissez des images
+                      Cliquez pour choisir ou glissez des images
                     </p>
                     <p className="text-sm text-gray-500 mt-2">
                       PNG, JPG, GIF max 10MB
@@ -432,7 +533,7 @@ export default function AddProductForm() {
                       className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
                     >
                       <Sparkles className="w-5 h-5" />
-                      Ameliorer avec l'IA
+                      Améliorer avec l'IA
                     </button>
                   </>
                 )}
@@ -446,7 +547,7 @@ export default function AddProductForm() {
                 {loading ? (
                   <>
                     <Loader2 className="animate-spin h-5 w-5" />
-                    Ajout Produit...
+                    Ajout du produit...
                   </>
                 ) : (
                   <>
@@ -466,7 +567,7 @@ export default function AddProductForm() {
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 flex items-center justify-between">
               <h3 className="text-2xl font-bold text-white flex items-center gap-2">
                 <Sparkles className="w-6 h-6" />
-                Amelioration Avec l'IA
+                Amélioration Avec l'IA
               </h3>
               {!enhancing && (
                 <button
@@ -485,10 +586,10 @@ export default function AddProductForm() {
                     <Loader2 className="w-10 h-10 text-purple-600 animate-spin" />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-800 mb-2">
-                    Ameliorations ...
+                    Amélioration en cours...
                   </h4>
                   <p className="text-gray-600">
-                    Processing image {currentEnhancingIndex + 1} of{" "}
+                    Traitement de l'image {currentEnhancingIndex + 1} sur{" "}
                     {images.length}
                   </p>
                   <div className="mt-6 max-w-md mx-auto">
@@ -508,7 +609,7 @@ export default function AddProductForm() {
                 <>
                   <div className="mb-6">
                     <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                      Comparer Original avec Les Ameliorations
+                      Comparer Original avec Les Améliorations
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {imagePreviews.map((preview, index) => (
@@ -528,7 +629,7 @@ export default function AddProductForm() {
                           <div>
                             <p className="text-sm font-medium text-purple-600 mb-2 flex items-center gap-1">
                               <Sparkles className="w-4 h-4" />
-                              Amelioré
+                              Amélioré
                             </p>
                             <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300">
                               <img
@@ -549,14 +650,14 @@ export default function AddProductForm() {
                       className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       <RotateCcw className="w-5 h-5" />
-                      Reessayer
+                      Réessayer
                     </button>
                     <button
                       onClick={confirmEnhancedImages}
                       className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       <Check className="w-5 h-5" />
-                      Choisir Ces ameliorations
+                      Choisir Ces améliorations
                     </button>
                   </div>
                 </>

@@ -15,7 +15,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     handleClose();
-    window.location.href = "/"; // Redirect to login page after logout
+    window.location.href = "/";
   };
 
   // Function to handle drawer link clicks
@@ -470,40 +470,99 @@ export default function Navbar() {
           size="md"
           onClose={() => setOpenModal(false)}
           popup
+          className="backdrop-blur-sm"
         >
-          <ModalHeader />
-          <ModalBody>
-            <div className="text-center">
-              <div className="mx-auto mb-4 h-14 w-14 text-gray-400">
-                <svg
-                  className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
+          <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-0 overflow-hidden">
+            {/* Close button */}
+            <button
+              onClick={() => setOpenModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 z-10"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Content */}
+            <div className="px-8 py-10 text-center">
+              {/* Icon with animated background */}
+              <div className="mx-auto mb-6 relative">
+                <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                  <div className="w-16 h-16 bg-red-200 dark:bg-red-800/50 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-red-600 dark:text-red-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                Voulez Vous vous déconnecter?
+
+              {/* Title */}
+              <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+                Déconnexion
               </h3>
-              <div className="flex justify-center gap-4">
-                <Button color="red" onClick={handleLogout}>
-                  Oui
+
+              {/* Description */}
+              <p className="mb-8 text-gray-600 dark:text-gray-300 text-base leading-relaxed max-w-sm mx-auto">
+                Êtes-vous sûr(e) de vouloir vous déconnecter de votre session ?
+              </p>
+
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  color="red"
+                  onClick={handleLogout}
+                  className="px-8 py-3 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 text-white font-medium rounded-lg text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7"
+                    />
+                  </svg>
+                  Oui, me déconnecter
                 </Button>
-                <Button color="alternative" onClick={() => setOpenModal(false)}>
+
+                <Button
+                  color="gray"
+                  onClick={() => setOpenModal(false)}
+                  className="px-8 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl border border-gray-300 dark:border-gray-600"
+                >
                   Annuler
                 </Button>
               </div>
             </div>
-          </ModalBody>
+
+            {/* Decorative gradient border */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-pink-500 to-red-600"></div>
+          </div>
         </Modal>
       </>
     );
@@ -649,6 +708,21 @@ export default function Navbar() {
                     onClick={handleDrawerLinkClick}
                     className="flex items-center gap-4 w-full rounded-xl border border-gray-200 bg-white px-5 py-4 text-left text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-cyan-700 hover:border-cyan-200 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 transition-all duration-200 transform hover:scale-[1.02]"
                   >
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        />
+                      </svg>
+                    </div>
                     <div>
                       <p className="font-medium">Gestions Produits</p>
                       <p className="text-xs text-gray-500">
@@ -663,6 +737,21 @@ export default function Navbar() {
                     onClick={handleDrawerLinkClick}
                     className="flex items-center gap-4 w-full rounded-xl border border-gray-200 bg-white px-5 py-4 text-left text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-cyan-700 hover:border-cyan-200 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 transition-all duration-200 transform hover:scale-[1.02]"
                   >
+                    <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                        />
+                      </svg>
+                    </div>
                     <div>
                       <p className="font-medium">Gestion Users</p>
                       <p className="text-xs text-gray-500">

@@ -139,6 +139,9 @@ export function UserTable({
             <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
               numéro
             </TableHeadCell>
+            <TableHeadCell className="text-gray-700 font-bold text-sm uppercase tracking-wide">
+              Actif depuis
+            </TableHeadCell>
             <TableHeadCell className="text-right">
               <span className="text-gray-700 font-bold text-sm uppercase tracking-wide">
                 Actions
@@ -174,6 +177,12 @@ export function UserTable({
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <span>{user.phone}</span>
+                </div>
+              </TableCell>
+              <TableCell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white group-hover:text-blue-700 transition-colors duration-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span>{new Date(user.createdAt).toLocaleDateString()}</span>{" "}
                 </div>
               </TableCell>
 

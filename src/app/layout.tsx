@@ -30,8 +30,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <Navbar />
-
-          {children}
+          <main className="flex-grow">{children}</main>
         </AuthProvider>
         <Footer container>
           <div className="w-full text-center">
