@@ -76,11 +76,6 @@ export function ProductTable({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", selectedProduct.title);
-    formData.append("price", selectedProduct.price.toString());
-    formData.append("description", selectedProduct.description);
-
     try {
       const response = await fetch(
         `http://localhost:9000/api/products/editproduct/${selectedProduct._id}`,
@@ -88,8 +83,13 @@ export function ProductTable({
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          body: formData,
+          body: JSON.stringify({
+            title: selectedProduct.title,
+            price: selectedProduct.price,
+            description: selectedProduct.description,
+          }),
         }
       );
 
@@ -97,23 +97,26 @@ export function ProductTable({
         throw new Error(`Failed to update Product`);
       }
 
+      // Parse response (even if empty)
+      const data = await response.json().catch(() => ({}));
+
       setError("");
       setMessage("Produit modifié avec succès");
+      setOpenUpdateModal(false);
+      setSelectedProduct(null);
 
+      // Refresh the product list
       if (onProductDeleted) {
         onProductDeleted();
       }
-
-      setOpenUpdateModal(false);
-      setSelectedProduct(null);
 
       // Clear success message after 3 seconds
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setError("Erreur du Serveur");
-      setOpenUpdateModal(false);
     } finally {
       setIsDeleting(false);
+      setOpenUpdateModal(false);
     }
   }
 
@@ -292,14 +295,58 @@ export function ProductTable({
       </Modal>
 
       {/* Update Modal */}
-      <Modal show={openUpdateModal} onClose={() => setOpenUpdateModal(false)}>
-        <ModalHeader>Modifier le produit</ModalHeader>
-        <ModalBody>
+      <Modal
+        show={openUpdateModal}
+        onClose={() => !isDeleting && setOpenUpdateModal(false)}
+        size="lg"
+      >
+        <ModalHeader className="border-b border-gray-100 pb-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">
+                Modifier le produit
+              </h3>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Mettez à jour les informations du produit
+              </p>
+            </div>
+          </div>
+        </ModalHeader>
+        <ModalBody className="py-6">
           {selectedProduct && (
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Titre
+            <form className="space-y-6">
+              {/* Title Input */}
+              <div className="group">
+                <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-2">
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
+                  </svg>
+                  <span>Titre</span>
                 </label>
                 <input
                   type="text"
@@ -310,13 +357,28 @@ export function ProductTable({
                       title: e.target.value,
                     })
                   }
-                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-200 outline-none font-medium"
+                  placeholder="Entrez le titre du produit"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
+              {/* Description Textarea */}
+              <div className="group">
+                <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-2">
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h7"
+                    />
+                  </svg>
+                  <span>Description</span>
                 </label>
                 <textarea
                   value={selectedProduct.description}
@@ -326,42 +388,110 @@ export function ProductTable({
                       description: e.target.value,
                     })
                   }
-                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-200 outline-none resize-none font-medium"
+                  rows={4}
+                  placeholder="Décrivez votre produit..."
                 ></textarea>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Prix (TND)
+              {/* Price Input */}
+              <div className="group">
+                <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-2">
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>Prix (TND)</span>
                 </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={selectedProduct.price}
-                  onChange={(e) =>
-                    setSelectedProduct({
-                      ...selectedProduct,
-                      price: parseFloat(e.target.value) || 0,
-                    })
-                  }
-                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                />
+                <div className="relative">
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={selectedProduct.price}
+                    onChange={(e) =>
+                      setSelectedProduct({
+                        ...selectedProduct,
+                        price: parseFloat(e.target.value) || 0,
+                      })
+                    }
+                    className="w-full pl-4 pr-12 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-200 outline-none font-bold text-lg"
+                    placeholder="0.00"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">
+                    TND
+                  </span>
+                </div>
               </div>
             </form>
           )}
         </ModalBody>
-        <ModalFooter>
-          <Button onClick={updateProduct} disabled={isDeleting}>
-            {isDeleting ? "Enregistrement..." : "Enregistrer"}
-          </Button>
+        <ModalFooter className="border-t border-gray-100 pt-4 flex justify-end space-x-3">
           <Button
-            color="alternative"
+            color="light"
             onClick={() => setOpenUpdateModal(false)}
             disabled={isDeleting}
+            className="px-6 py-2.5 font-semibold hover:bg-gray-100 transition-colors duration-200"
           >
             Annuler
           </Button>
+          <button
+            onClick={updateProduct}
+            disabled={isDeleting}
+            className="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center space-x-2"
+          >
+            {isDeleting ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>Enregistrement...</span>
+              </>
+            ) : (
+              <>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span>Enregistrer</span>
+              </>
+            )}
+          </button>
         </ModalFooter>
       </Modal>
     </div>

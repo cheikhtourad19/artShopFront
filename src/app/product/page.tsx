@@ -19,7 +19,7 @@ export default function Products() {
 
       if (!user) {
         setError("No user logged in");
-        window.location.href = "/login";
+
         return;
       }
 
