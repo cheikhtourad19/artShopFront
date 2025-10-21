@@ -10,7 +10,7 @@ export default function Products() {
   const [error, setError] = useState("");
   const { user } = useAuth();
   const handleProductDeleted = () => {
-    fetchProducts(); // Refresh the user list
+    fetchProducts(); // Refresh the product list
   };
   const fetchProducts = useCallback(async () => {
     try {
