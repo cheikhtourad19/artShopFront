@@ -6,7 +6,6 @@ import {
   TableHeadCell,
   TableRow,
 } from "flowbite-react";
-import { User } from "@/types/auth";
 import { useState } from "react";
 import { getToken } from "@/lib/auth";
 import {
@@ -25,20 +24,25 @@ export function ProductTable({
   products: Product[];
   onProductDeleted?: () => void;
 }) {
-  const [error, setError] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [message, setMessage] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [message, setMessage] = useState<string>("");
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const token = getToken();
-  async function deleteProduct(id) {
+
+  async function deleteProduct(id: string) {
     setIsDeleting(true);
     setError("");
     setMessage("");
 
     try {
       const response = await fetch(
-        `http://localhost:9000/api/products//deleteproduct/${id}`,
+        `http://localhost:9000/api/products/deleteproduct/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -53,7 +57,7 @@ export function ProductTable({
 
       setMessage("Produit supprimé avec succès");
 
-      // Call the callback to refresh the user list
+      // Call the callback to refresh the product list
       if (onProductDeleted) {
         onProductDeleted();
       }
@@ -66,10 +70,63 @@ export function ProductTable({
       setIsDeleting(false);
     }
   }
-  const handleDeleteClick = (userId) => {
-    setSelectedProductId(userId);
+
+  async function updateProduct() {
+    if (!selectedProduct) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", selectedProduct.title);
+    formData.append("price", selectedProduct.price.toString());
+    formData.append("description", selectedProduct.description);
+
+    try {
+      const response = await fetch(
+        `http://localhost:9000/api/products/editproduct/${selectedProduct._id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update Product`);
+      }
+
+      setError("");
+      setMessage("Produit modifié avec succès");
+
+      if (onProductDeleted) {
+        onProductDeleted();
+      }
+
+      setOpenUpdateModal(false);
+      setSelectedProduct(null);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
+    } catch (error) {
+      setError("Erreur du Serveur");
+      setOpenUpdateModal(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  const handleUpdateClick = (product: Product) => {
+    setSelectedProduct(product);
+    setOpenUpdateModal(true);
+  };
+
+  const handleDeleteClick = (productId: string) => {
+    setSelectedProductId(productId);
     setOpenModal(true);
   };
+
   const confirmDelete = () => {
     if (selectedProductId) {
       deleteProduct(selectedProductId);
@@ -77,8 +134,21 @@ export function ProductTable({
     setOpenModal(false);
     setSelectedProductId(null);
   };
+
   return (
     <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-100">
+      {/* Success/Error Messages */}
+      {message && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+
       <Table hoverable>
         <TableHead className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50">
           <TableRow>
@@ -99,7 +169,7 @@ export function ProductTable({
           </TableRow>
         </TableHead>
         <TableBody className="divide-y divide-gray-100">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <TableRow
               key={product._id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gradient-to-r hover:from-blue-50/30 hover:via-transparent hover:to-purple-50/30 transition-all duration-300 group"
@@ -115,7 +185,7 @@ export function ProductTable({
               </TableCell>
               <TableCell className="font-semibold">
                 <div className="inline-flex items-center bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 px-3 py-1.5 rounded-xl text-sm font-bold">
-                  {parseFloat(product.price).toFixed(2)} TND
+                  {parseFloat(product.price.toString()).toFixed(2)} TND
                 </div>
               </TableCell>
 
@@ -149,8 +219,8 @@ export function ProductTable({
                   </a>
 
                   {/* Modifier Button */}
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => handleUpdateClick(product)}
                     className="group/btn inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105"
                   >
                     <svg
@@ -167,7 +237,7 @@ export function ProductTable({
                       />
                     </svg>
                     <span>Modifier</span>
-                  </a>
+                  </button>
 
                   {/* Supprimer Button */}
                   <button
@@ -195,6 +265,8 @@ export function ProductTable({
           ))}
         </TableBody>
       </Table>
+
+      {/* Delete Confirmation Modal */}
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Confirmer la suppression</ModalHeader>
         <ModalBody>
@@ -215,6 +287,80 @@ export function ProductTable({
             disabled={isDeleting}
           >
             Non
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Update Modal */}
+      <Modal show={openUpdateModal} onClose={() => setOpenUpdateModal(false)}>
+        <ModalHeader>Modifier le produit</ModalHeader>
+        <ModalBody>
+          {selectedProduct && (
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Titre
+                </label>
+                <input
+                  type="text"
+                  value={selectedProduct.title}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  value={selectedProduct.description}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      description: e.target.value,
+                    })
+                  }
+                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                  rows={3}
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Prix (TND)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={selectedProduct.price}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      price: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </form>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={updateProduct} disabled={isDeleting}>
+            {isDeleting ? "Enregistrement..." : "Enregistrer"}
+          </Button>
+          <Button
+            color="alternative"
+            onClick={() => setOpenUpdateModal(false)}
+            disabled={isDeleting}
+          >
+            Annuler
           </Button>
         </ModalFooter>
       </Modal>
