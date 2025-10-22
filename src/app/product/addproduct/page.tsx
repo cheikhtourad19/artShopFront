@@ -80,7 +80,7 @@ export default function AddProductForm() {
       });
       setTimeout(() => {
         setMessage({ type: "", text: "" });
-      }, 1000);
+      }, 2000);
       return;
     }
 
@@ -120,7 +120,7 @@ export default function AddProductForm() {
         });
         setTimeout(() => {
           setMessage({ type: "", text: "" });
-        }, 1000);
+        }, 2000);
       } else {
         throw new Error(data.message || "Failed to generate description");
       }
@@ -132,7 +132,7 @@ export default function AddProductForm() {
       });
       setTimeout(() => {
         setMessage({ type: "", text: "" });
-      }, 1000);
+      }, 2000);
     } finally {
       setGeneratingDescription(false);
     }
@@ -144,6 +144,9 @@ export default function AddProductForm() {
         type: "error",
         text: "Veuillez d'abord télécharger des images",
       });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 2000);
       return;
     }
 
@@ -201,6 +204,9 @@ export default function AddProductForm() {
         type: "error",
         text: "Erreur lors de l'amélioration des images. Veuillez réessayer.",
       });
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 2000);
       setEnhancing(false);
       setShowEnhanceModal(false);
     }
@@ -217,6 +223,9 @@ export default function AddProductForm() {
       type: "success",
       text: "Images améliorées appliquées avec succès!",
     });
+    setTimeout(() => {
+      setMessage({ type: "", text: "" });
+    }, 2000);
   };
 
   const retryEnhancement = () => {
@@ -251,6 +260,12 @@ export default function AddProductForm() {
         type: "error",
         text: "Veuillez remplir tous les champs obligatoires",
       });
+      setTimeout(() => {
+        setMessage({
+          type: "",
+          text: "",
+        });
+      }, 2000);
       return;
     }
 
